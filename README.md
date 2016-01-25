@@ -1,2 +1,7 @@
-# food_finder
-a basic command line ruby application 
+# Food Finder
+
+a basic command line ruby application
+
+`git clone ... && cd $_`
+
+`ruby init.rb`
