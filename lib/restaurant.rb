@@ -3,6 +3,7 @@ class Restaurant
   @@filepath = nil
 
   def initialize(args = {})
+    # todo: validate args
     @name    = args[:name]    || ""
     @cuisine = args[:cuisine] || ""
     @price   = args[:price]   || ""

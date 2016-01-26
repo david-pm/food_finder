@@ -10,9 +10,9 @@ class Guide
     Restaurant.filepath = path
 
     if Restaurant.file_usable?
-      puts "Found restaurant"
+      puts "Found restaurant\n\n"
     elsif Restaurant.create_file
-      puts "Created restaurant"
+      puts "Created restaurant\n\n"
     else
       puts `banner -w 30 Exiting`
       exit!
@@ -20,16 +20,16 @@ class Guide
   end
 
   def launch!
-    intro
+    output_salutations " Welcome to the Food Finder "
 
     # action loop
     result = nil
     until result == :quit
-      action = get_action
-      result = do_action(action)
+      action, args = get_action
+      result = do_action(action, args)
     end
 
-    conclusion
+    output_salutations " Goodbye and Bon Appetit! "
   end
 
   def get_action
@@ -38,17 +38,19 @@ class Guide
       puts "Actions: " + Guide::Config.actions.join(", ") if action
       print "> "
       user_response = gets.chomp
-      action = user_response.downcase.strip
+      args = user_response.downcase.split(" ")
+      action = args.shift # remove args[0]
     end
-    return action
+    return [action, args]
   end
 
-  def do_action(action)
+  def do_action(action, args = [])
     case action
     when "list"
       list
     when "find"
-      puts "Finding..."
+      keyword = args.shift
+      find(keyword)
     when "add"
       add
     when "quit"
@@ -58,18 +60,29 @@ class Guide
     end
   end
 
-  def list
-    puts "\nListing restaurants\n\n".upcase
-
-    restaurants = Restaurant.saved_restaurants
-    restaurants.each do |r|
-      puts r.name + " | " + r.cuisine + " | " + r.price
+  def find(keyword="")
+    output_action_header("find a restaurant")
+    if keyword
+      restaurants = Restaurant.saved_restaurants
+      found = restaurants.select do |r|
+        r.name.downcase.include?(keyword.downcase) ||
+        r.cuisine.downcase.include?(keyword.downcase)
+      end
+      output_restaurant_table(found)
+    else
+      puts "Try 'find' then a cuisne type or restaurant name. "
     end
   end
 
-  def add
-    puts "\nAdd a restaurant\n\n".upcase
+  def list
+    output_action_header("restaurants")
+    restaurants = Restaurant.saved_restaurants
 
+    output_restaurant_table(restaurants)
+  end
+
+  def add
+    output_action_header("add a restaurant")
     restaurant = Restaurant.build_using_questions
 
     if restaurant.save
@@ -79,13 +92,29 @@ class Guide
     end
   end
 
-  def intro
-    puts "\n\n<<<<< Welcome to the Food Finder >>>>>>\n\n"
-    puts `banner -w 30 Food`
-  end
+  private
 
-  def conclusion
-    puts "\n<<<< Goodbye and Bon Appetit! >>>>\n\n"
-  end
+    def output_salutations(text)
+      puts "\n#{text.upcase.center(60, '*')}\n\n"
+    end
+
+    def output_action_header(text)
+      puts "\n#{text.upcase.center(60)}\n\n"
+    end
+
+    def output_restaurant_table(restaurants=[])
+      print " " + "Name".ljust(30)
+      print " " + "Cuisine".ljust(20)
+      print " " + "Price".ljust(6) + "\n"
+      puts "-" * 60
+      restaurants.each do |r|
+        line =  " " << r.name.ljust(30)
+        line << " " +  r.cuisine.ljust(20)
+        line << " " +  r.price.ljust(6)
+        puts line
+      end
+      puts "No listings found" if restaurants.empty?
+      puts "-" * 60
+    end
 
 end
