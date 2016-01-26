@@ -59,7 +59,7 @@ class Guide
   end
 
   def list
-    puts "\nListing a restaurant\n\n".capitalize
+    puts "\nListing restaurants\n\n".upcase
 
     restaurants = Restaurant.saved_restaurants
     restaurants.each do |r|
@@ -68,7 +68,7 @@ class Guide
   end
 
   def add
-    puts "\nAdd a restaurant\n\n".capitalize
+    puts "\nAdd a restaurant\n\n".upcase
 
     restaurant = Restaurant.build_using_questions
 
