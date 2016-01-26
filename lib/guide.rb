@@ -76,6 +76,7 @@ class Guide
 
   def list(args=[])
     sort_order = args.shift
+    sort_order = args.shift if sort_order == 'by'
     sort_order = "name" unless ["name", "cuisine"].include?(sort_order)
 
     output_action_header("restaurants")
