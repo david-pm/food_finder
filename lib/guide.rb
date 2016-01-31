@@ -2,7 +2,7 @@ require 'restaurant'
 
 class Guide
   class Config
-    @@actions = %w[list find add quit]
+    @@actions = %w[list find add exit]
     def self.actions; @@actions; end
   end
 
@@ -21,10 +21,11 @@ class Guide
 
   def launch!
     output_salutations " Welcome to the Food Finder "
+    puts "Type: 'list', 'find', 'add' or 'exit' to continue\n".center(60)
 
     # action loop
     result = nil
-    until result == :quit
+    until result == :exit
       action, args = get_action
       result = do_action(action, args)
     end
@@ -53,8 +54,8 @@ class Guide
       find(keyword)
     when "add"
       add
-    when "quit"
-      return :quit
+    when "exit"
+      return :exit
     else # safety net
       puts "\nI dont understand that command.\n"
     end
