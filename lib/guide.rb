@@ -2,7 +2,7 @@ require 'restaurant'
 
 class Guide
   class Config
-    @@actions = %w[list find add exit]
+    @@actions = %w[list find add exit clear]
     def self.actions; @@actions; end
   end
 
@@ -28,6 +28,9 @@ class Guide
     until result == :exit
       action, args = get_action
       result = do_action(action, args)
+      if result == :clear
+        Gem.win_platform? ? (system "cls") : (system "clear")
+      end
     end
 
     output_salutations " Goodbye and Bon Appetit! "
@@ -56,8 +59,10 @@ class Guide
       add
     when "exit"
       return :exit
+    when "clear"
+      return :clear
     else # safety net
-      puts "\nI dont understand that command.\n"
+      puts "\nI dont understand that weird command.\n"
     end
   end
 

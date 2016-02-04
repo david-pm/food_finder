@@ -40,3 +40,6 @@ Thumbs.db
 *.sass-cache*
 
 restaurants.txt
+.sw*
+*.swp
+**/*.swp
