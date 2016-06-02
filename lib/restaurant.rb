@@ -41,7 +41,6 @@ class Restaurant
     if file_usable?
       file = File.new(@@filepath, 'r')
       file.each_line do |line|
-
         restaurants << Restaurant.new.import_line(line.chomp)
       end
       file.close
