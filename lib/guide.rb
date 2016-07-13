@@ -17,6 +17,15 @@ class Guide
       puts `banner -w 30 Exiting`
       exit!
     end
+    clear_screen_type
+  end
+
+  def clear_screen_type
+    if Gem.win_platform? 
+      def clear_screen!; (system "cls"); end
+    else
+      def clear_screen!; (system "clear"); end
+    end
   end
 
   def launch!
@@ -29,7 +38,7 @@ class Guide
       action, args = get_action
       result = do_action(action, args)
       if result == :clear
-        Gem.win_platform? ? (system "cls") : (system "clear")
+        clear_screen!
       end
     end
 
